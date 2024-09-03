@@ -121,4 +121,45 @@ class Usuario extends Model
 
     return $this;
   }
+
+  //Informações do Usuário
+  public function getInfoUsuario()
+  {
+    $query = "SELECT nome FROM usuarios WHERE id = :id";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(":id", $this->__get("id"), \PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  //Total de tweets
+  public function qtdTweetsPorUsuario()
+  {
+    $query = "SELECT COUNT(*) as qtd_tweets FROM tweets WHERE idusuario = :idusuario";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(':idusuario', $this->__get("id"), \PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  //Total de usuários que estamos seguindo
+  public function qtdTotalSeguindo()
+  {
+    $query = "SELECT COUNT(*) as qtd_total_seguindo FROM usuarios_seguidores WHERE id_usuario = :idusuario";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(':idusuario', $this->__get("id"), \PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  //Total de seguidores de um usuário
+  public function qtdTotalSeguidores()
+  {
+    $query = "SELECT COUNT(*) as qtd_total_seguidores FROM usuarios_seguidores WHERE id_usuario_seguindo = :idusuario";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(':idusuario', $this->__get("id"), \PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(\PDO::FETCH_ASSOC);
+  }
 }

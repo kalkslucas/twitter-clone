@@ -35,10 +35,17 @@ class Tweet extends Model
   //Recuperar tweets
   public function listarTweets()
   {
-    $query = "SELECT t.id as id, t.idusuario, u.nome as nome, t.tweet, DATE_FORMAT(t.data, '%d/%m/%Y %H:%i') as data 
+    $query = "SELECT 
+                t.id as id, 
+                t.idusuario, 
+                u.nome as nome, 
+                t.tweet, 
+                DATE_FORMAT(t.data, '%d/%m/%Y %H:%i') as data 
               FROM tweets t 
               LEFT JOIN usuarios u ON t.idusuario = u.id 
-              WHERE idusuario = :idusuario ORDER BY t.data DESC";
+              WHERE idusuario = :idusuario 
+              OR t.idusuario in (SELECT id_usuario_seguindo FROM `usuarios_seguidores` WHERE id_usuario = :idusuario)
+              ORDER BY t.data DESC";
     $stmt = $this->db->prepare($query);
     $stmt->bindValue(':idusuario', $this->__get('idusuario'), \PDO::PARAM_INT);
     $stmt->execute();
@@ -46,13 +53,14 @@ class Tweet extends Model
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
 
-  //Contar tweets realizados
-  public function qtdTweetsPorUsuario()
+  //Remover tweet publicado
+  public function remover($idtweet)
   {
-    $query = "SELECT COUNT(*) as QTD_TWEETS FROM tweets WHERE idusuario = :idusuario";
+    $query = "DELETE FROM tweets WHERE id = ?";
     $stmt = $this->db->prepare($query);
-    $stmt->bindValue(':idusuario', $this->__get("idusuario"), \PDO::PARAM_INT);
+    $stmt->bindValue(1, $idtweet, \PDO::PARAM_INT);
     $stmt->execute();
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    return true;
   }
 }

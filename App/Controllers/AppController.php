@@ -15,11 +15,18 @@ class AppController extends Action
     $tweet = Container::getModel('Tweet');
 
     $tweet->__set('idusuario', $_SESSION['id']);
-    $qtdTweetsPorUsuario = $tweet->qtdTweetsPorUsuario();
     $tweets = $tweet->listarTweets();
 
-    $this->view->qtdTweetsPorUsuario = $qtdTweetsPorUsuario['QTD_TWEETS'];
     $this->view->tweets = $tweets;
+
+    $usuario = Container::getModel('Usuario');
+    $usuario->__set('id', $_SESSION['id']);
+
+    $this->view->info_usuario = $usuario->getInfoUsuario();
+    $this->view->total_tweets = $usuario->qtdTweetsPorUsuario();
+    $this->view->total_seguindo = $usuario->qtdTotalSeguindo();
+    $this->view->total_seguidores = $usuario->qtdTotalSeguidores();
+
     $this->render('timeline');
   }
 
@@ -47,6 +54,15 @@ class AppController extends Action
       $usuarios = $usuario->listarUsuarios();
     }
     $this->view->pesquisarPorUsuario = $usuarios;
+
+    $usuario = Container::getModel('Usuario');
+    $usuario->__set('id', $_SESSION['id']);
+
+    $this->view->info_usuario = $usuario->getInfoUsuario();
+    $this->view->total_tweets = $usuario->qtdTweetsPorUsuario();
+    $this->view->total_seguindo = $usuario->qtdTotalSeguindo();
+    $this->view->total_seguidores = $usuario->qtdTotalSeguidores();
+
     $this->render('quemSeguir');
   }
 
@@ -60,6 +76,9 @@ class AppController extends Action
     $usuario = Container::getModel('Usuario');
     $usuario->__set('id', $_SESSION['id']);
 
+    $idtweet = isset($_GET['idtweet']) ? $_GET['idtweet'] : '';
+    $tweet = Container::getModel('Tweet');
+
     switch ($acao) {
       case 'seguir':
         $usuario->seguirUsuario($id_usuario_seguindo);
@@ -68,6 +87,10 @@ class AppController extends Action
       case 'deixar_de_seguir':
         $usuario->deixarSeguirUsuario($id_usuario_seguindo);
         header('Location: /quem_seguir');
+        break;
+      case 'remover_tweet':
+        $tweet->remover($idtweet);
+        header('Location: /timeline');
     }
   }
 
