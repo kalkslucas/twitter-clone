@@ -38,6 +38,12 @@ class Route extends Bootstrap
       'action' => 'timeline'
     ];
 
+    $routes['tweet'] = [
+      'route' => '/tweet',
+      'controller' => 'appController',
+      'action' => 'tweet'
+    ];
+
     $routes['sair'] = [
       'route' => '/sair',
       'controller' => 'authController',
