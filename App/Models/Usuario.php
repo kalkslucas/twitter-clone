@@ -76,17 +76,49 @@ class Usuario extends Model
     return $this;
   }
 
-  //Listando Usuários
+  //Pesquisando por alguns usuários
   public function listarUsuarios()
   {
-    $query = "SELECT id, nome, email FROM usuarios WHERE nome LIKE CONCAT('%', :nome, '%')";
+    $query = "SELECT u.id, u.nome, u.email, 
+              (
+                SELECT count(*) as seguindo_sn 
+                FROM usuarios_seguidores us 
+                WHERE us.id_usuario = :id 
+                and us.id_usuario_seguindo = u.id
+              ) as seguindo_sn
+              FROM usuarios u
+              WHERE u.nome 
+              LIKE CONCAT('%', :nome, '%') 
+              AND u.id != :id";
     $stmt = $this->db->prepare($query);
     $stmt->bindValue(":nome", $this->__get("nome"), \PDO::PARAM_STR);
+    $stmt->bindValue(":id", $this->__get('id'), \PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
 
-  //Pesquisando por alguns usuários
-  public function pesquisar() {}
+  //Seguir Usuário
+  public function seguirUsuario($id_usuario_seguindo)
+  {
+    $query = "INSERT INTO usuarios_seguidores (id_usuario, id_usuario_seguindo) VALUES (?, ?)";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(1, $this->__get("id"), \PDO::PARAM_INT);
+    $stmt->bindValue(2, $id_usuario_seguindo, \PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $this;
+  }
+
+  //Deixar de Seguir Usuário
+  public function deixarSeguirUsuario($id_usuario_seguindo)
+  {
+    $query = "DELETE FROM usuarios_seguidores WHERE id_usuario = :id_usuario AND id_usuario_seguindo = :id_usuario_seguindo";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(":id_usuario", $this->__get("id"), \PDO::PARAM_INT);
+    $stmt->bindValue(":id_usuario_seguindo", $id_usuario_seguindo, \PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $this;
+  }
 }

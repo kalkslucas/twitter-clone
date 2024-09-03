@@ -50,6 +50,12 @@ class Route extends Bootstrap
       'action' => 'quemSeguir'
     ];
 
+    $routes['acao'] = [
+      'route' => '/acao',
+      'controller' => 'appController',
+      'action' => 'acao'
+    ];
+
     $routes['sair'] = [
       'route' => '/sair',
       'controller' => 'authController',
