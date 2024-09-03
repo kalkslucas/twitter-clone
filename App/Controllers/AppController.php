@@ -34,6 +34,23 @@ class AppController extends Action
     header('Location: /timeline');
   }
 
+  //Pesquisa por outros usuários do sistema para seguir
+  public function quemSeguir()
+  {
+    $this->validaAutenticacao();
+    $pesquisarPor = isset($_GET['pesquisarPor']) ? $_GET['pesquisarPor'] : '';
+    $usuarios = [];
+    if ($pesquisarPor != '') {
+      $usuario = Container::getModel('Usuario');
+      $usuario->__set('nome', $pesquisarPor);
+      $usuarios = $usuario->listarUsuarios();
+    }
+    $this->view->pesquisarPorUsuario = $usuarios;
+    $this->render('quemSeguir');
+  }
+
+
+  //Validação do usuário para utilizar das funções do sistema
   public function validaAutenticacao()
   {
     session_start();

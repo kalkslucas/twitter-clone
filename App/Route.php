@@ -44,11 +44,19 @@ class Route extends Bootstrap
       'action' => 'tweet'
     ];
 
+    $routes['quemSeguir'] = [
+      'route' => '/quem_seguir',
+      'controller' => 'appController',
+      'action' => 'quemSeguir'
+    ];
+
     $routes['sair'] = [
       'route' => '/sair',
       'controller' => 'authController',
       'action' => 'sair'
     ];
+
+
     $this->setRoutes($routes);
   }
 }

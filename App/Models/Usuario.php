@@ -75,4 +75,18 @@ class Usuario extends Model
     }
     return $this;
   }
+
+  //Listando Usuários
+  public function listarUsuarios()
+  {
+    $query = "SELECT id, nome, email FROM usuarios WHERE nome LIKE CONCAT('%', :nome, '%')";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(":nome", $this->__get("nome"), \PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+  }
+
+  //Pesquisando por alguns usuários
+  public function pesquisar() {}
 }
