@@ -21,17 +21,20 @@
 		</div>
 
 		<div class="col-md-6 pt-4 px-5">
-			<form>
+			<form action="/autenticar" method="post">
 				<div class="row">
 					<div class="col">
-						<input type="text" class="form-control" placeholder="E-mail">
+						<input type="mail" name="email" class="form-control" placeholder="E-mail">
 					</div>
 					<div class="col">
-						<input type="text" class="form-control" placeholder="Senha">
+						<input type="password" name="senha" class="form-control" placeholder="Senha">
 					</div>
 					<div class="col-auto">
 						<button type="submit" class="btn btn-primary mb-2">Entrar</button>
 					</div>
+					<?php if ($this->view->login == 'erro') { ?>
+						<div class="alert alert-danger" role="alert">E-mail e/ou senha inválido(s)</div>
+					<?php } ?>
 				</div>
 			</form>
 
