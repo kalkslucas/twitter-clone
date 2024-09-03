@@ -1,0 +1,23 @@
+{
+  "name": "kalkslucas/miniframework",
+  "description": "Conhecendo o Composer e Configurando no VSCode",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "authors": [
+      {
+          "name": "Lucas Kalks",
+          "email": "lucaskalks00@gmail.com",
+          "role": "Developer",
+          "homepage": "https://kalkslucas.github.io/"
+      }
+  ],
+  "autoload": {
+      "psr-4": {
+          "App\\": "App/",
+          "MF\\": "vendor/MF/"
+      }
+  },
+  "require": {
+      "php": ">=7.0"
+  }
+}
