@@ -136,7 +136,7 @@ class Usuario extends Model
   //Total de tweets
   public function qtdTweetsPorUsuario()
   {
-    $query = "SELECT COUNT(*) as qtd_tweets FROM tweets WHERE idusuario = :idusuario";
+    $query = "SELECT COUNT(*) as qtd_tweets FROM tweets WHERE id_usuario = :idusuario";
     $stmt = $this->db->prepare($query);
     $stmt->bindValue(':idusuario', $this->__get("id"), \PDO::PARAM_INT);
     $stmt->execute();
